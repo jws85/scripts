@@ -1,0 +1,36 @@
+#!/bin/bash
+# Get current weather, using OpenWeatherMap
+# This requires signing up for an account
+
+command -v jq >/dev/null 2>&1 || { echo >&2 "Please install jq"; exit 1; }
+command -v curl >/dev/null 2>&1 || { echo >&2 "Please install curl"; exit 1; }
+
+CONFIG=$HOME/.config/$USER/weather.config.json
+if [ ! -f $CONFIG ]; then
+    echo "Weather config not found at $CONFIG!"
+    exit 1
+fi
+
+WEATHER=$HOME/.weather.json
+LOCATION=$( cat $CONFIG | jq -r '.location' )
+APPID=$( cat $CONFIG | jq -r '.appid' )
+
+if [ "$LOCATION" == "geolocate" ]; then
+    GEODATA=$HOME/.geodata.json
+    if [ ! -f $GEODATA ]; then
+        echo "Geolocation data not found at $GEODATA, fetching!"
+        geo-fetch
+    fi
+
+    LAT=$( cat $GEODATA | jq -r '.lat' )
+    LON=$( cat $GEODATA | jq -r '.lon' )
+    curl --silent \
+        "https://api.openweathermap.org/data/2.5/weather?lat=$LAT&lon=$LON&appid=$APPID" \
+        >$WEATHER \
+        2>>/tmp/weather.errors
+else
+    curl --silent \
+        "https://api.openweathermap.org/data/2.5/weather?id=$LOCATION&appid=$APPID" \
+        >$WEATHER \
+        2>>/tmp/weather.errors
+fi

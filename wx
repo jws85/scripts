@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+
+import json
+import os
+import time
+import sys
+
+def kelvin2fahrenheit(kelvin):
+    return ((kelvin - 273.15) * 9)/5 + 32
+
+def latlon2human(coords):
+    if coords['lat'] > 0:
+        nshemi = 'N'
+    else:
+        nshemi = 'S'
+
+    if coords['lon'] > 0:
+        ewhemi = 'E'
+    else:
+        ewhemi = 'W'
+
+    return '{0:4.2f}°{1} {2:4.2f}°{3}'.format(
+        abs(coords['lat']), nshemi,
+        abs(coords['lon']), ewhemi)
+
+# https://openweathermap.org/weather-conditions
+def icon(code):
+    if code == '01d' or code == '01n': # sunny
+        return '☀'
+    elif code == '02d' or code == '02n': # few clouds
+        return '⛅'
+    elif code == '03d' or code == '03n': # scattered clouds
+        return '⛅'
+    elif code == '04d' or code == '04n': # broken clouds
+        return '☁'
+    elif code == '09d' or code == '09n': # shower rain
+        return '⛆'
+    elif code == '10d' or code == '10n': # rain
+        return '⛆'
+    elif code == '11d' or code == '11n': # thunderstorm
+        return '⛈'
+    elif code == '13d' or code == '13n': # snow
+        return '☃'
+    elif code == '50d' or code == '50n': # fog
+        return '🌫'
+
+def minimal(current):
+    print('{0} {1:2.0f}°F'.format(
+        icon(current['weather'][0]['icon']),
+        kelvin2fahrenheit(current['main']['temp'])))
+
+def verbose(current):
+    print('{0:13s}{1:2.0f}°F {2} {3}'.format(
+        'Conditions:',
+        kelvin2fahrenheit(current['main']['temp']),
+        icon(current['weather'][0]['icon']),
+        current['weather'][0]['main']))
+
+    print('{0:13s}{1}, {2} ({3})'.format(
+        'Location:',
+        current['name'],
+        current['sys']['country'],
+        latlon2human(current['coord'])))
+
+    sunrise = time.strftime('%H:%M', time.localtime(current['sys']['sunrise']))
+    sunset = time.strftime('%H:%M', time.localtime(current['sys']['sunset']))
+    print('{0:13s}{1}'.format('Sunrise:', sunrise))
+    print('{0:13s}{1}'.format('Sunset:', sunset))
+
+def main(argv):
+    weatherFile = os.path.expanduser('~/.weather.json')
+    if not os.path.exists(weatherFile):
+        print('☂ Failed!')
+        sys.exit(1)
+
+    with open(os.path.expanduser('~/.weather.json')) as fh:
+        current = json.load(fh)
+        if len(argv) >= 2 and argv[1] == 'minimal':
+            minimal(current)
+        else:
+            verbose(current)
+
+    fh.close()
+
+if __name__ == '__main__':
+    main(sys.argv)

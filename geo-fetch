@@ -1,0 +1,8 @@
+#!/bin/bash
+# Get current location, IP address
+
+# ip-api.com: free, no API key needed, but HTTP only in its free plan...
+# Alternatives here: https://underconstructionpage.com/free-paid-geoip-services/
+
+GEODATA=$HOME/.geodata.json
+curl --silent http://ip-api.com/json > $GEODATA 2>>/tmp/geo.errors
