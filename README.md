@@ -3,8 +3,8 @@ This is a set of scripts I've thrown together.
 Installation
 ---
 
-These scripts are self-contained.  You could symlink the scripts into
-your `PATH`.
+These scripts are self-contained.  The included `Makefile` simply
+symlinks them into your `PATH`.
 
 Copy `config/weather.config.json` to `$HOME/.config/$USER/weather.json`
 and modify as mentioned below.
