@@ -5,7 +5,7 @@
 command -v jq >/dev/null 2>&1 || { echo >&2 "Please install jq"; exit 1; }
 command -v curl >/dev/null 2>&1 || { echo >&2 "Please install curl"; exit 1; }
 
-CONFIG=$HOME/.config/$USER/weather.config.json
+CONFIG=$HOME/.config/wx-scripts/wx.json
 if [ ! -f $CONFIG ]; then
     echo "Weather config not found at $CONFIG!"
     exit 1

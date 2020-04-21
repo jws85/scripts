@@ -6,7 +6,7 @@ Installation
 These scripts are self-contained.  The included `Makefile` simply
 symlinks them into your `PATH`.
 
-Copy `config/weather.config.json` to `$HOME/.config/$USER/weather.json`
+Copy `config/weather.config.json` to `$HOME/.config/wx-scripts/wx.json`
 and modify as mentioned below.
 
 Explanation
@@ -22,7 +22,7 @@ issue I'll look at an alternative.
 [OpenWeatherMap](https://openweathermap.org/).  You'll need an API key
 from them; it's free if you stay under the usage limits.  An example
 config file lives under `config`; copy it to
-`$HOME/.config/$USER/weather.json`.  Set `location` to `geolocate` to
+`$HOME/.config/wx-scripts/wx.json`.  Set `location` to `geolocate` to
 use the data from `geo-fetch` for location. Otherwise, you can get the
 `location` ID from OpenWeatherMap by doing a search for your city on
 the site and grabbing the numeric ID in the URL.
